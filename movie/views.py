@@ -34,7 +34,6 @@ class add_movie_view(FormView):
     success_url= reverse_lazy('movie')
     
     def form_valid(self, form):
-        print(form.cleaned_data)
         form.save()
         return super().form_valid(form)
 
@@ -83,3 +82,10 @@ class delete_review(DeleteView):
     model=ReviewModel
     template_name='del_confirm.html'
     success_url=reverse_lazy('movie')
+
+def category_filter(request, category):
+    if category:
+        movies=movieModel.objects.filter(category=category)
+    else:
+        movies=movieModel.objects.all()
+    return render(request,'movies.html',{'movie':movies})

@@ -9,4 +9,5 @@ urlpatterns = [
     path('detail-movie/<int:id>/',views.movie_details,name='detail_movie'),
     path('review/<int:movieId>/',views.submit_review,name='review'),
     path('update_review/<int:pk>/',views.update_review.as_view(),name='update_review'),
+    path('category/<slug:category>/',views.category_filter,name='category'),
 ]
