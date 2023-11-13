@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="col-md-6 mx-auto p-4 shadow mt-4">
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        {{ field.label}}
+        {{ field}}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <small class="text-danger">{{error}}</small>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    <button type="submit" class="btn for btn-info mt-3 fw-bold text-white">submit</button>
+    </form>
+    {% if error %}
+    <small class="text-danger mt-3 fw-bold">{{error}}</small>
+    {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <small class="text-success text-center mt-3">{{message}}</small>
+    {% endfor %}
+    {% endif %}
+</section>
+{% endblock content %}

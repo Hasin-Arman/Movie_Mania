@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Movie{% endblock title %}
+{% block content %}
+<section class="container mt-3">
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        {% for item in movie %}
+        <div class="col">
+          <div class="card p-2 shadow w-75">
+            <img src="{{item.image.url}}" style="height:200px" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{item.title}}</h5>
+              <p class="card-text">{{item.description}}</p>
+              <a class="btn btn-info fw-bold text-white" href="{% url "update_movie" item.id %}">update</a>
+              <a class="btn btn-danger fw-bold text-white" href="{% url "delete_movie" item.id %}">Delete</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+</section>
+{% endblock content %}
