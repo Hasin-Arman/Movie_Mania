@@ -88,4 +88,4 @@ def category_filter(request, category):
         movies=movieModel.objects.filter(category=category)
     else:
         movies=movieModel.objects.all()
-    return render(request,'movies.html',{'movie':movies})
+    return render(request,'movie_staff.html',{'movie':movies})
