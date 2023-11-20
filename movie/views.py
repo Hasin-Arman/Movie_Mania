@@ -6,6 +6,8 @@ from .forms import MovieForm,ReviewForm
 from django.views.generic import FormView
 from django.views import View
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class movie_view(ListView):
     model= movieModel
@@ -27,8 +29,8 @@ class movie_view(ListView):
             return [self.template_name]
         return super().get_template_names()
 
-
-class add_movie_view(FormView):
+class add_movie_view(LoginRequiredMixin,FormView):
+    login_url = 'signin'
     form_class = MovieForm
     template_name = "add_movie.html"
     success_url= reverse_lazy('movie')
@@ -36,14 +38,16 @@ class add_movie_view(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-
-class update_movie(UpdateView):
+    
+class update_movie(LoginRequiredMixin,UpdateView):
+    login_url = 'signin'
     model=movieModel
     template_name='add_movie.html'
     form_class=MovieForm
     success_url=reverse_lazy('movie')
 
-class delete_movie(DeleteView):
+class delete_movie(LoginRequiredMixin,DeleteView):
+    login_url = 'signin'
     model=movieModel
     template_name='del_confirm.html'
     success_url=reverse_lazy('movie')
@@ -72,13 +76,15 @@ def submit_review(request,movieId):
             messages.error(request, 'please login first')
     return HttpResponseRedirect(reverse('detail_movie', kwargs={'id': movie.id}))
 
-class update_review(UpdateView):
+class update_review(LoginRequiredMixin,UpdateView):
+    login_url = 'signin'
     model=ReviewModel
     template_name='update_review.html'
     form_class=ReviewForm
     success_url=reverse_lazy('movie')
-
-class delete_review(DeleteView):
+    
+class delete_review(LoginRequiredMixin,DeleteView):
+    login_url = 'signin'
     model=ReviewModel
     template_name='del_confirm.html'
     success_url=reverse_lazy('movie')
@@ -88,4 +94,8 @@ def category_filter(request, category):
         movies=movieModel.objects.filter(category=category)
     else:
         movies=movieModel.objects.all()
-    return render(request,'movie_staff.html',{'movie':movies})
+        
+    if request.user.is_staff:
+        return render(request,'movie_staff.html',{'movie':movies})
+    
+    return render(request,'movies.html',{'movie':movies})
